@@ -1,0 +1,29 @@
+<html>
+<head>
+	<script type="text/javascript" src="jquery/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Long Poll Test</h1>
+	<button type="button" id="increment" name="button">Increment</button>
+	<script type="text/javascript">
+		$(document).ready(_=>
+		{
+			console.log("ready");
+
+			poll();
+
+			$('#increment').on('click',function(e)
+			{
+				console.log(e);
+				$.post('/increment', function(res){ console.log(res)});
+			})
+		})
+
+		function poll()
+		{
+			$.ajax({url: "/count", success: res =>{ console.log(res)}}); //TODO turn into longPoll
+		}
+	</script>
+</body>
+
+</html>
