@@ -8,7 +8,7 @@
 	<div id="result"></div>
 	<script type="text/javascript">
 	let id;
-	
+
 		$(document).ready(_=>
 		{
 
@@ -20,7 +20,7 @@
 			$('#increment').on('click',function(e)
 			{
 				$('#increment').prop('disabled', true);
-				$.post('/increment', function(res){ console.log(res)});
+				$.post('/increment', {id: id}, function(res){ console.log(res)});
 			})
 		})
 

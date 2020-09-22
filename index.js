@@ -7,6 +7,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const port = 3000
 let counter = 0;
 let subscribers = [];
+let clickCounter = {};
 
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 
@@ -23,6 +24,16 @@ app.get('/count', (req, res) =>
 app.post('/increment', (req, res) =>
 {
 	counter++;
+
+	if(clickCounter[req.body.id] == undefined)
+	{
+		clickCounter[req.body.id] = 1;
+	}
+	else
+	{
+		clickCounter[req.body.id] += 1;
+	}
+
 	publish();
 	res.status(200).send("counter: " + counter);
 })
@@ -40,7 +51,7 @@ function subscribe(id, res)
 	{
 		//initial subscription
 		subscribers.push({id: id, res: res});
-		res.send("the count is " + counter);
+		sendResponse(res);
 	}
 }
 
@@ -50,14 +61,22 @@ function publish()
 	{
 		if(subscribers[i].res == null)
 		{
+			//remove dead subscribers
 			subscribers.splice(i,1);
 		}
 		else
 		{
-			subscribers[i].res.send("the count is " + counter);
+			sendResponse(subscribers[i].res,subscribers[i].id);
 			subscribers[i].res = null;
 		}
 	}
+}
+
+function sendResponse(res,id)
+{
+
+	let x = clickCounter[id] || 0;
+	res.send("the count is " + counter + ", you have clicked " + x + " times.");
 }
 
 app.listen(port, () => {
