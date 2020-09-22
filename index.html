@@ -5,6 +5,7 @@
 <body>
 	<h1>Long Poll Test</h1>
 	<button type="button" id="increment" name="button">Increment</button>
+	<div id="result"></div>
 	<script type="text/javascript">
 		$(document).ready(_=>
 		{
@@ -14,14 +15,27 @@
 
 			$('#increment').on('click',function(e)
 			{
-				console.log(e);
+				$('#increment').prop('disabled', true);
 				$.post('/increment', function(res){ console.log(res)});
 			})
 		})
 
 		function poll()
 		{
-			$.ajax({url: "/count", success: res =>{ console.log(res)}}); //TODO turn into longPoll
+			$.ajax({
+			method: "GET",
+			url: "/count", success: res =>
+			{
+				$('#result').empty();
+				$('#result').html(res);
+				$('#increment').prop('disabled', false);
+			},
+			error:(err)=>
+			{
+				//console.log(err);
+			},
+			complete: poll ,
+			timeout: 30000});
 		}
 	</script>
 </body>

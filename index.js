@@ -17,23 +17,25 @@ app.get('/count', (req, res) =>
 	subscribe(res);
 })
 
-app.post('/increment', (req, res) =>{
-
+app.post('/increment', (req, res) =>
+{
 	counter++;
-	console.log(counter);
-
-	for(let i = 0; i < subscribers.length; i++)
-	{
-		subscribers[i].send("the count is" + counter);
-	}
-	subscribers = [];
-
-	res.status(200);
+	publish();
+	res.status(200).send("counter: " + counter);
 })
 
 function subscribe(res)
 {
 	subscribers.push(res);
+}
+
+function publish()
+{
+	for(let i = 0; i < subscribers.length; i++)
+	{
+		subscribers[i].send("the count is " + counter);
+	}
+	subscribers = [];
 }
 
 app.listen(port, () => {
