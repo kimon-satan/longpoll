@@ -7,9 +7,13 @@
 	<button type="button" id="increment" name="button">Increment</button>
 	<div id="result"></div>
 	<script type="text/javascript">
+	let id;
+	
 		$(document).ready(_=>
 		{
-			console.log("ready");
+
+			id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+			console.log("ready: " + id);
 
 			poll();
 
@@ -24,6 +28,7 @@
 		{
 			$.ajax({
 			method: "GET",
+			data: {id: id},
 			url: "/count", success: res =>
 			{
 				$('#result').empty();
